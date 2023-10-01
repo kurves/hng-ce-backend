@@ -2,3 +2,5 @@ gunicorn
 django
 djangorestframework
 python-decouple
+celery
+redis
