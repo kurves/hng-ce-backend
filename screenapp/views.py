@@ -3,16 +3,17 @@ import redis
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
-from rest_framework import viewsets
+from rest_framework import viewsets,generics
 from .models import ScreenVideo
 from .serializers import ScreenVideoSerializer
 
-class ScreenVideoViewSet(viewsets.ModelViewSet):
+import pika
+class ScreenVideoView(generics.ListCreateAPIView):
     queryset = ScreenVideo.objects.all()
     serializer_class = ScreenVideoSerializer
 
 
-"""class StartVideoUploadView(APIView):
+class ScreenVideoUploadView(APIView):
 
 
     def post(self, request):
@@ -33,3 +34,35 @@ class ScreenVideoViewSet(viewsets.ModelViewSet):
         return Response({'status': 'success'})
 
 """
+from rest_framework.views import APIView
+from rest_framework.response import Response
+import pika
+
+class TranscribeVideoView(APIView):
+    Transcribes a video using Whisper.
+
+    def post(self, request):
+        Accepts the video ID from the frontend and sends it to RabbitMQ.
+
+        # Get the video ID from the request body.
+        video_id = request.data['video_id']
+
+        # Create a RabbitMQ connection.
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host='localhost'))
+
+        # Create a RabbitMQ channel.
+        channel = connection.channel()
+
+        # Declare a RabbitMQ queue.
+        channel.queue_declare(queue='video_transcriptions')
+
+        # Publish the video ID to the RabbitMQ queue.
+        channel.basic_publish(exchange='', routing_key='video_transcriptions', body=video_id)
+
+        # Close the RabbitMQ connection.
+        connection.close()
+
+        # Return a response to the frontend.
+        return Response({'status': 'success'})
+        """
