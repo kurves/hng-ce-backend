@@ -12,11 +12,11 @@ class ScreenVideoViewSet(viewsets.ModelViewSet):
     serializer_class = ScreenVideoSerializer
 
 
-class StartVideoUploadView(APIView):
+"""class StartVideoUploadView(APIView):
 
 
     def post(self, request):
-        """Accepts the video data from the frontend and stores it in a temporary location."""
+
 
         # Get the video data from the request body.
         video_data = request.data
@@ -32,4 +32,4 @@ class StartVideoUploadView(APIView):
         # Return a response to the frontend.
         return Response({'status': 'success'})
 
-
+"""
