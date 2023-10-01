@@ -1,5 +1,4 @@
 from django.shortcuts import render
-import redis
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
@@ -10,7 +9,6 @@ import tempfile
 import os
 from rest_framework.parsers import MultiPartParser
 from rest_framework import status
-import pika
 from rest_framework.decorators import api_view
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 from django.core.files.base import ContentFile
