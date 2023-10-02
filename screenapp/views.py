@@ -15,9 +15,7 @@ from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-import pika
+
 
 class ScreenVideoView(generics.ListCreateAPIView):
     queryset = ScreenVideo.objects.all()
