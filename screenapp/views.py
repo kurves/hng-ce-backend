@@ -16,65 +16,77 @@ class ScreenVideoView(generics.ListCreateAPIView):
     queryset = ScreenVideo.objects.all()
     serializer_class = ScreenVideoSerializer
 
-
+"""
 class ScreenVideoUploadView(APIView):
     parser_classes = (MultiPartParser,)
+
+"""   
+"""
     def create_video(request):
         serializer = VideoSerializer(data=request.data)
         if serializer.is_valid():
             video = serializer.save()
             return Response({'video_id': video.id}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def append_video(request, video_id):
-        try:
-            video = Video.objects.get(pk=video_id)
-        except Video.DoesNotExist:
-            return Response({'error': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        if not request.data:
-            return Response({'error': 'No video data provided'}, status=status.HTTP_400_BAD_REQUEST)
-        new_video_data = request.data.get('upload')
-
-        process_video.delay(video_id, request.data)
-
- 
-        if video.upload:
-            existing_video_data = video.upload.read()
-
-            with tempfile.NamedTemporaryFile(delete=False) as existing_tempfile:
-                existing_tempfile.write(existing_video_data)
-                existing_tempfile_path = existing_tempfile.name
-
-            with tempfile.NamedTemporaryFile(delete=False) as new_tempfile:
-                new_tempfile.write(new_video_data.read())
-                new_tempfile_path = new_tempfile.name
-
-            existing_clip = VideoFileClip(existing_tempfile_path)
-            new_clip = VideoFileClip(new_tempfile_path)
-            final_clip = concatenate_videoclips([existing_clip, new_clip])
-    
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as final_tempfile:
-                final_clip.write_videofile(final_tempfile.name, codec='libx264')
-                final_tempfile_path = final_tempfile.name
-
-            video.upload.save(f'video_{video.id}.mp4', ContentFile(open(final_tempfile_path, 'rb').read()))
-
-            os.remove(existing_tempfile_path)
-            os.remove(new_tempfile_path)
-            os.remove(final_tempfile_path)
-
-            return Response({'message': 'Video appended and joined successfully'}, status=status.HTTP_200_OK)
-        else:
-            video.upload.save(f'video_{video.id}.mp4', ContentFile(new_video_data.read()))
-            return Response({'message': 'Video added successfully'}, status=status.HTTP_200_OK)
-
+    """
+@api_view(['POST'])
+def append_video(request):
+    serializer = VideoSerializer(data=request.data)
+    if serializer.is_valid():
+        recording_chunk = serializer.validated_data['recordingChunk']
      
     
-    """def post(self, request):
+    try:
+        video = ScreenVideo.objects.get(pk=video_id)
+    except Video.DoesNotExist:
+        return Response({'error': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if not request.data:
+        return Response({'error': 'No video data provided'}, status=status.HTTP_400_BAD_REQUEST)
+    new_video_data = request.data.get('upload')
+
+    process_video.delay(video_id, request.data)
+
+
+    if video.upload:
+        recording = ScreenVideo.objects.create()
+        recording.recordingChunk.save(recording_chunk.name,recording_chunk)
+        existing_video_data = video.upload.read()
+
+        with tempfile.NamedTemporaryFile(delete=False) as existing_tempfile:
+            existing_tempfile.write(existing_video_data)
+            existing_tempfile_path = existing_tempfile.name
+
+        with tempfile.NamedTemporaryFile(delete=False) as new_tempfile:
+            new_tempfile.write(new_video_data.read())
+            new_tempfile_path = new_tempfile.name
+
+        existing_clip = VideoFileClip(existing_tempfile_path)
+        new_clip = VideoFileClip(new_tempfile_path)
+        final_clip = concatenate_videoclips([existing_clip, new_clip])
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as final_tempfile:
+            final_clip.write_videofile(final_tempfile.name, codec='libx264')
+            final_tempfile_path = final_tempfile.name
+
+        video.upload.save(f'video_{video.id}.mp4', ContentFile(open(final_tempfile_path, 'rb').read()))
+
+        os.remove(existing_tempfile_path)
+        os.remove(new_tempfile_path)
+        os.remove(final_tempfile_path)
+
+        return Response({'message': 'Video appended and joined successfully'}, status=status.HTTP_200_OK)
+    else:
+        video.upload.save(f'video_{video.id}.mp4', ContentFile(new_video_data.read()))
+        return Response({'message': 'Video added successfully'}, status=status.HTTP_200_OK)
+
+    """ 
+
+class ScreenVideoUploadView(APIView):  
+    def post(self, request):
         try:
             # Get the video data from the request body.
-            video_chunk = request.GET['video']
+            video_chunk = request.GET['recordingchunk']
             temp_file= tempfile.NamedTemporaryFile(delete=False,suffix='.mp4') 
             for chunk in video_data.chunks():
                 temp_file.write(chunk)  
