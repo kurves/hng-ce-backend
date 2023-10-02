@@ -4,4 +4,4 @@ from .models import ScreenVideo
 class ScreenVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScreenVideo
-        fields = ["video_file"]
+        fields = "__all__"

@@ -12,6 +12,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 from django.core.files.base import ContentFile
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 class ScreenVideoView(generics.ListCreateAPIView):
     queryset = ScreenVideo.objects.all()
     serializer_class = ScreenVideoSerializer
@@ -23,12 +25,12 @@ class ScreenVideoUploadView(APIView):
 """   
 
 
-
+"""
 @api_view(['GET','POST'])
 def create_video(request):
     video = ScreenVideo.objects.create()
     return Response({'video_id': video.id}, status=status.HTTP_201_CREATED)
-
+    
 
 @api_view(['GET','POST'])
 def append_video(request,video_id):
@@ -36,18 +38,18 @@ def append_video(request,video_id):
     try:
         video = ScreenVideo.objects.get(pk=video_id)
     except ScreenVideo.DoesNotExist:
-        return Response({'error': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Screen Video not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    if not request.data:
-        return Response({'error': 'No video data provided'}, status=status.HTTP_400_BAD_REQUEST)
+    if not request.body:
+        return Response({'error': 'No Screen video data provided'}, status=status.HTTP_400_BAD_REQUEST)
     new_video_data = request.data.get('upload')
 
-    process_video.delay(video_id, request.data)
+    #process_video.delay(video_id, request.data)
 
 
     if video.upload:
-        recording = ScreenVideo.objects.create()
-        recording.recordingChunk.save(recording_chunk.name,recording_chunk)
+        #recording = ScreenVideo.objects.create()
+        #recording.recordingChunk.save(recording_chunk.name,recording_chunk)
         existing_video_data = video.upload.read()
 
         with tempfile.NamedTemporaryFile(delete=False) as existing_tempfile:
@@ -78,6 +80,33 @@ def append_video(request,video_id):
         return Response({'message': 'Video added successfully'}, status=status.HTTP_200_OK)
 
     """ 
+
+
+
+
+@api_view(['GET', 'POST'])
+@method_decorator(csrf_exempt, name='dispatch')  # Add this decorator if needed
+def create_video(request):
+    video = ScreenVideo.objects.create()
+    response = Response({'video_id': video.id}, status=status.HTTP_201_CREATED)
+    response["Access-Control-Allow-Origin"] = "*"  # Replace * with the allowed origin
+    return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
 
 class ScreenVideoUploadView(APIView):  
     def post(self, request):
@@ -132,7 +161,8 @@ def get_video(request, video_id):
 
 
 
-"""
+
+""""
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import pika
