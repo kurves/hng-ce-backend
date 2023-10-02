@@ -27,8 +27,7 @@ class ScreenVideoUploadView(APIView):
 @api_view(['GET','POST'])
 def create_video(request):
     video = ScreenVideo.objects.create()
-    video = serializer.save()
-    return Response({'video_id': video.id}, status=status.HTTP_201_CREATED)
+    return Response({'video_id': video.video_id}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET','POST'])
