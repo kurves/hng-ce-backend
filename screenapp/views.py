@@ -18,71 +18,6 @@ class ScreenVideoView(generics.ListCreateAPIView):
     queryset = ScreenVideo.objects.all()
     serializer_class = ScreenVideoSerializer
 
-"""
-class ScreenVideoUploadView(APIView):
-    parser_classes = (MultiPartParser,)
-
-"""   
-
-
-"""
-@api_view(['GET','POST'])
-def create_video(request):
-    video = ScreenVideo.objects.create()
-    return Response({'video_id': video.id}, status=status.HTTP_201_CREATED)
-    
-
-@api_view(['GET','POST'])
-def append_video(request,video_id):
-     
-    try:
-        video = ScreenVideo.objects.get(pk=video_id)
-    except ScreenVideo.DoesNotExist:
-        return Response({'error': 'Screen Video not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    if not request.body:
-        return Response({'error': 'No Screen video data provided'}, status=status.HTTP_400_BAD_REQUEST)
-    new_video_data = request.data.get('upload')
-
-    #process_video.delay(video_id, request.data)
-
-
-    if video.upload:
-        #recording = ScreenVideo.objects.create()
-        #recording.recordingChunk.save(recording_chunk.name,recording_chunk)
-        existing_video_data = video.upload.read()
-
-        with tempfile.NamedTemporaryFile(delete=False) as existing_tempfile:
-            existing_tempfile.write(existing_video_data)
-            existing_tempfile_path = existing_tempfile.name
-
-        with tempfile.NamedTemporaryFile(delete=False) as new_tempfile:
-            new_tempfile.write(new_video_data.read())
-            new_tempfile_path = new_tempfile.name
-
-        existing_clip = VideoFileClip(existing_tempfile_path)
-        new_clip = VideoFileClip(new_tempfile_path)
-        final_clip = concatenate_videoclips([existing_clip, new_clip])
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as final_tempfile:
-            final_clip.write_videofile(final_tempfile.name, codec='libx264')
-            final_tempfile_path = final_tempfile.name
-
-        video.upload.save(f'video_{video.id}.mp4', ContentFile(open(final_tempfile_path, 'rb').read()))
-
-        os.remove(existing_tempfile_path)
-        os.remove(new_tempfile_path)
-        os.remove(final_tempfile_path)
-
-        return Response({'message': 'Video appended and joined successfully'}, status=status.HTTP_200_OK)
-    else:
-        video.upload.save(f'video_{video.id}.mp4', ContentFile(new_video_data.read()))
-        return Response({'message': 'Video added successfully'}, status=status.HTTP_200_OK)
-
-    """ 
-
-
-
 
 @api_view(['GET', 'POST'])
 @method_decorator(csrf_exempt, name='dispatch')  # Add this decorator if needed
@@ -92,21 +27,6 @@ def create_video(request):
     response["Access-Control-Allow-Origin"] = "*"  # Replace * with the allowed origin
     return response
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
 
 class ScreenVideoUploadView(APIView):  
     def post(self, request):
@@ -132,7 +52,7 @@ class ScreenVideoUploadView(APIView):
 
         except Exception as e:
             return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-"""
+
 
 
 @api_view(['GET'])
@@ -154,15 +74,6 @@ def get_video(request, video_id):
 
 
 
-
-
-
-
-
-
-
-
-""""
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import pika
@@ -194,4 +105,4 @@ class TranscribeVideoView(APIView):
 
         # Return a response to the frontend.
         return Response({'status': 'success'})
-        """
+        
