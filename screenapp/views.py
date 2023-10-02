@@ -14,6 +14,11 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+import pika
+
 class ScreenVideoView(generics.ListCreateAPIView):
     queryset = ScreenVideo.objects.all()
     serializer_class = ScreenVideoSerializer
@@ -74,24 +79,18 @@ def get_video(request, video_id):
 
 
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-import pika
-
 class TranscribeVideoView(APIView):
-    Transcribes a video using Whisper.
+ 
 
     def post(self, request):
-        Accepts the video ID from the frontend and sends it to RabbitMQ.
 
-        # Get the video ID from the request body.
+
         video_id = request.data['video_id']
 
-        # Create a RabbitMQ connection.
         connection = pika.BlockingConnection(
             pika.ConnectionParameters(host='localhost'))
 
-        # Create a RabbitMQ channel.
+        
         channel = connection.channel()
 
         # Declare a RabbitMQ queue.
@@ -103,6 +102,6 @@ class TranscribeVideoView(APIView):
         # Close the RabbitMQ connection.
         connection.close()
 
-        # Return a response to the frontend.
+        
         return Response({'status': 'success'})
         
