@@ -27,7 +27,7 @@ class ScreenVideoUploadView(APIView):
 @api_view(['GET','POST'])
 def create_video(request):
     video = ScreenVideo.objects.create()
-    return Response({'video_id': video.video_id}, status=status.HTTP_201_CREATED)
+    return Response({'video_id': video.id}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET','POST'])
@@ -106,20 +106,20 @@ class ScreenVideoUploadView(APIView):
 """
 
 
-    @api_view(['GET'])
-    def get_video(request, video_id):
-        try:
-            video = Video.objects.get(pk=video_id)
-        except Video.DoesNotExist:
-            return Response({'error': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])
+def get_video(request, video_id):
+    try:
+        video = Video.objects.get(pk=video_id)
+    except Video.DoesNotExist:
+        return Response({'error': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        if not video.upload:
-            return Response({'error': 'No video data associated with this video ID'}, status=status.HTTP_400_BAD_REQUEST)
+    if not video.upload:
+        return Response({'error': 'No video data associated with this video ID'}, status=status.HTTP_400_BAD_REQUEST)
 
-        video_data = video.upload.read()
-        response = HttpResponse(video_data, content_type='video/mp4')
-        response['Content-Disposition'] = f'attachment; filename="video_{video.id}.mp4"'
-        return response
+    video_data = video.upload.read()
+    response = HttpResponse(video_data, content_type='video/mp4')
+    response['Content-Disposition'] = f'attachment; filename="video_{video.id}.mp4"'
+    return response
 
 
 
