@@ -21,24 +21,22 @@ class ScreenVideoUploadView(APIView):
     parser_classes = (MultiPartParser,)
 
 """   
-"""
-    def create_video(request):
-        serializer = VideoSerializer(data=request.data)
-        if serializer.is_valid():
-            video = serializer.save()
-            return Response({'video_id': video.id}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    """
-@api_view(['POST'])
-def append_video(request):
-    serializer = VideoSerializer(data=request.data)
+
+
+@api_view(['GET','POST'])
+def create_video(request):
     if serializer.is_valid():
-        recording_chunk = serializer.validated_data['recordingChunk']
-     
+        video = ScreenVideo.objects.create()
+        video = serializer.save()
+        return Response({'video_id': video.id}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['POST'])
+def append_video(request,video_id):
+     
     try:
         video = ScreenVideo.objects.get(pk=video_id)
-    except Video.DoesNotExist:
+    except ScreenVideo.DoesNotExist:
         return Response({'error': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
 
     if not request.data:

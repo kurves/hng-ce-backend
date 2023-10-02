@@ -9,6 +9,7 @@ router = DefaultRouter()
 
 urlpatterns=[
     path("api/",ScreenVideoView.as_view(),name="video-list"),
-    path("api/upload", views.append_video,name="upload")
+    path("api/upload", views.append_video,name="upload"),
+    path("api/upload",views.create_video,name="create-video")
    # path("api/transcribe",views.TranscribeVideoView.as_view(), name="tran")
 ]
