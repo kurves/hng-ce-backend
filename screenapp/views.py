@@ -61,11 +61,11 @@ class ScreenVideoUploadView(APIView):
 @api_view(['GET'])
 def get_video(request, video_id):
     try:
-        video = Video.objects.get(pk=video_id)
-    except Video.DoesNotExist:
+        video = ScreenVideo.objects.get(pk=video_id)
+    except ScreenVideo.DoesNotExist:
         return Response({'error': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    if not video.upload:
+    if not video.video_file:
         return Response({'error': 'No video data associated with this video ID'}, status=status.HTTP_400_BAD_REQUEST)
 
     video_data = video.upload.read()
@@ -75,11 +75,9 @@ def get_video(request, video_id):
 
 
 
-
-
-class TranscribeVideoView(APIView):
  
-
+@api_view(['GET'])
+def transcribe_video(request, video_id):
     def post(self, request):
 
 

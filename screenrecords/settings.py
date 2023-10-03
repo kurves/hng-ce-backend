@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY",)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['hng-ce-backend.onrender.com','127.0.0.1']
 
@@ -140,3 +140,8 @@ REDIS_PORT = 6379
 # Celery configuration
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+
+SWAGGER_SETTINGS = {
+   'USE_SESSION_AUTH': False
+}

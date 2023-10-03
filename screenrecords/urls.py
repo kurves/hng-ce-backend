@@ -26,7 +26,8 @@ from rest_framework import permissions
 schema_view = get_schema_view(
     openapi.Info(
         title="Backend Chrome extension API",
-        default_version='v1',),
+        default_version='v1',
+        description="Endpoints for uploading videos to an endpoint",),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
