@@ -21,7 +21,7 @@ class ScreenVideoView(generics.ListCreateAPIView):
     queryset = ScreenVideo.objects.all()
     serializer_class = ScreenVideoSerializer
 
-
+@extend_schema(request=XSerializer, responses=XSerializer)
 @api_view(['GET', 'POST'])
 @method_decorator(csrf_exempt, name='dispatch')  # Add this decorator if needed
 def create_video(request):
@@ -57,7 +57,7 @@ class ScreenVideoUploadView(APIView):
             return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
+@extend_schema(request=XSerializer, responses=XSerializer)
 @api_view(['GET'])
 def get_video(request, video_id):
     try:

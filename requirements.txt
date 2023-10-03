@@ -6,3 +6,4 @@ python-decouple
 moviepy
 drf-yasg
 whitenoise
+drf-yasg[validation]
