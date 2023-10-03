@@ -14,6 +14,7 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+#from drf_yasg.views import extend_schema
 
 
 
@@ -21,7 +22,7 @@ class ScreenVideoView(generics.ListCreateAPIView):
     queryset = ScreenVideo.objects.all()
     serializer_class = ScreenVideoSerializer
 
-@extend_schema(request=XSerializer, responses=XSerializer)
+#@extend_schema(request=XSerializer, responses=XSerializer)
 @api_view(['GET', 'POST'])
 @method_decorator(csrf_exempt, name='dispatch')  # Add this decorator if needed
 def create_video(request):
@@ -57,7 +58,7 @@ class ScreenVideoUploadView(APIView):
             return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@extend_schema(request=XSerializer, responses=XSerializer)
+#@extend_schema(request=XSerializer, responses=XSerializer)
 @api_view(['GET'])
 def get_video(request, video_id):
     try:

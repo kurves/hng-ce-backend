@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'screenapp',
     'rest_framework',
-    'drf_yasg'
+    'drf_yasg',
+    'whitenoise.runserver_nostatic',
 
 ]
 
@@ -63,7 +64,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
+
 
 ROOT_URLCONF = 'screenrecords.urls'
 
@@ -135,10 +138,14 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+STATIC_URL = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
+
+
+
+#STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 
 
 # Default primary key field type
@@ -155,9 +162,7 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 
-SWAGGER_SETTINGS = {
-   'USE_SESSION_AUTH': False
-}
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
@@ -166,7 +171,15 @@ REST_FRAMEWORK = {
 }
 
 SWAGGER_SETTINGS = {
-    
-    'VALIDATOR_URL': FALSE,
-    
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+        }
+    },
+    'APIS_SORTER': 'alpha',
+    'SHOW_REQUEST_HEADERS': True,
+    'JSON_EDITOR': True,
 }
