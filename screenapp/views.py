@@ -77,28 +77,28 @@ def get_video(request, video_id):
 
 
  
-@api_view(['GET'])
-def transcribe_video(request, video_id):
-    def post(self, request):
+@api_view(['POST'])
+def transcribe_video(request):
+    video_file = request.FILES.get('video')
 
+    if not video_file:
+        return Response({'error': 'Video file not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-        video_id = request.data['video_id']
+    # Save the video to a temporary file
+    with open('temp_video.mp4', 'wb') as temp_file:
+        for chunk in video_file.chunks():
+            temp_file.write(chunk)
+    os.system(f'ffmpeg -i temp_video.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 temp_audio.wav')
 
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host='localhost'))
+    # Transcribe the audio using OpenAI's Whisper ASR
+    with open('temp_audio.wav', 'rb') as audio_file:
+        audio_data = audio_file.read()
 
-        
-        channel = connection.channel()
+    openai.api_key = settings.OPENAI_API_KEY
+    transcription = openai.Transcription.create(audio=audio_data, engine="whisper")
 
-        # Declare a RabbitMQ queue.
-        channel.queue_declare(queue='video_transcriptions')
+    # Clean up temporary files
+    os.remove('temp_video.mp4')
+    os.remove('temp_audio.wav')
 
-        # Publish the video ID to the RabbitMQ queue.
-        channel.basic_publish(exchange='', routing_key='video_transcriptions', body=video_id)
-
-        # Close the RabbitMQ connection.
-        connection.close()
-
-        
-        return Response({'status': 'success'})
-        
+    return Response({'transcription': transcription.text}, status=status.HTTP_200_OK)
