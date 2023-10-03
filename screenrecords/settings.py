@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'screenapp',
     'rest_framework',
-    'drf_yasg'
+    'drf-yasg'
 
 ]
 
