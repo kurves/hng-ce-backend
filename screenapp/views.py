@@ -77,10 +77,16 @@ def get_video(request, video_id):
 
  # Extracting audio from video
 
- def extract_audio(request):
+def extract_audio(request):
     video_path=request.data['video_file']
     video= VideoFileClip(video_path)
- 
+
+    audio=video.audio
+    temp_file= tempfile.NamedTemporaryFile(delete=False,suffix='.mp3') 
+    audio.write_audiofile(temp_file)
+    video.close()
+    audio.close()
+
 @api_view(['GET'])
 def transcribe_video(request, video_id):
     def post(self, request):
