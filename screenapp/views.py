@@ -75,7 +75,11 @@ def get_video(request, video_id):
     return response
 
 
+ # Extracting audio from video
 
+ def extract_audio(request):
+    video_path=request.data['video_file']
+    video= VideoFileClip(video_path)
  
 @api_view(['GET'])
 def transcribe_video(request, video_id):
@@ -102,3 +106,6 @@ def transcribe_video(request, video_id):
         
         return Response({'status': 'success'})
         
+
+       
+       
