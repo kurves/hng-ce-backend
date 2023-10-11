@@ -8,3 +8,4 @@ drf-yasg
 whitenoise
 drf-yasg[validation]
 pika
+pocketsphinx
