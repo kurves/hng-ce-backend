@@ -44,7 +44,10 @@ class ScreenVideoUploadView(APIView):
             
             video = Video(title=request.data('title'))
             video.video_file.save(os.path.basename(temp_file.name), temp_file)
-
+            video = ScreenVideo.objects.get(pk=serializer.instance.id)
+            transcript=transcribe_video(video.video_file.path)
+            video.trancription=transcript
+            video.save()
             os.remove(temp_file.name)  # Remove the temporary file
 
 
