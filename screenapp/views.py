@@ -77,7 +77,7 @@ def get_video(request, video_id):
 
  # Extracting audio from video
 
-def extract_audio(request):
+def extract_audio(request,video_id):
     video_path=request.data['video_file']
     video= VideoFileClip(video_path)
 
@@ -89,29 +89,29 @@ def extract_audio(request):
 
 @api_view(['GET'])
 def transcribe_video(request, video_id):
-    def post(self, request):
+  
+    video = ScreenVideo.objects.get(pk=video_id)
 
+    
 
-        video_id = request.data['video_id']
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host='localhost'))
 
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host='localhost'))
+    
+    channel = connection.channel()
 
-        
-        channel = connection.channel()
+    # Declare a RabbitMQ queue.
+    channel.queue_declare(queue='video_transcriptions')
 
-        # Declare a RabbitMQ queue.
-        channel.queue_declare(queue='video_transcriptions')
+    # Publish the video ID to the RabbitMQ queue.
+    channel.basic_publish(exchange='', routing_key='video_transcriptions', body=video_id)
 
-        # Publish the video ID to the RabbitMQ queue.
-        channel.basic_publish(exchange='', routing_key='video_transcriptions', body=video_id)
+    # Close the RabbitMQ connection.
+    connection.close()
 
-        # Close the RabbitMQ connection.
-        connection.close()
-
-        
-        return Response({'status': 'success'})
-        
+    
+    return Response(data,{'status': 'success'})
+    
 
        
        

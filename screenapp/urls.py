@@ -11,4 +11,5 @@ urlpatterns=[
     path("api/",ScreenVideoView.as_view(),name="video-list"),
     path("api/upload",views.create_video,name="create-video"),
     path('api/get_video/<video_id>/', views.get_video, name='get_video'),
+    path('api/transcribe/<video_id>/', views.transcribe_video, name='_video'),
 ]
