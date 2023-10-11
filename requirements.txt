@@ -7,4 +7,4 @@ moviepy
 drf-yasg
 whitenoise
 drf-yasg[validation]
-moviepy
+pika
