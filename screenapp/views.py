@@ -72,7 +72,7 @@ def get_video(request, video_id):
     if not video.video_file:
         return Response({'error': 'No video data associated with this video ID'}, status=status.HTTP_400_BAD_REQUEST)
 
-    video_data = video.upload.read()
+    video_data = video.video_file.read()
     response = HttpResponse(video_data, content_type='video/mp4')
     response['Content-Disposition'] = f'attachment; filename="video_{video.id}.mp4"'
     return response
