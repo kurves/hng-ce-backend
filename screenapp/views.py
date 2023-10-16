@@ -82,7 +82,7 @@ def get_video(request, video_id):
  # Extracting audio from video
 @api_view(['GET'])
 def extract_audio(request,video_id):
-    video_path=request.data['video_file']
+    video_path=ScreenVideo.video_file
     video= VideoFileClip(video_path)
 
     audio=video.audio
