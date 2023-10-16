@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.response import Response 
 from django.conf import settings
 from rest_framework import viewsets,generics
 from .models import ScreenVideo
@@ -14,6 +14,7 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.http import HttpResponse
 #from drf_yasg.views import extend_schema
 
 
