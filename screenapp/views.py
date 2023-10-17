@@ -85,14 +85,25 @@ def get_video(request, video_id):
 def extract_audio(request,video_id):
     video = ScreenVideo.objects.get(pk=video_id)
     video_path=video.video_file.path
-    video= VideoFileClip(video_path)
+    video_output= video.transcription.path
+    
+    command = [
+        'ffmpeg',
+        '-i', video_path,
+        '-q:a', '0',
+        '-map', 'a',
+        video_output,
+    ]
 
-    audio=video.audio
+
+
+
+    """audio=video.audio
     temp_file= tempfile.NamedTemporaryFile(delete=False,suffix='.mp3') 
     audio.write_audiofile(temp_file)
     video.close()
     audio.close()
-
+    """
 @api_view(['GET'])
 def transcribe_video(request, video_id):
   
