@@ -85,7 +85,7 @@ def get_video(request, video_id):
 def extract_audio(request,video_id):
     video = ScreenVideo.objects.get(pk=video_id)
     video_path=video.video_file.path
-    video_output= video.transcription.path
+    video_output= video.video_file.path
     
     command = [
         'ffmpeg',
