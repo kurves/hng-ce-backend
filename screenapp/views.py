@@ -15,6 +15,7 @@ from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
+import subprocess
 #from drf_yasg.views import extend_schema
 
 
@@ -82,7 +83,8 @@ def get_video(request, video_id):
  # Extracting audio from video
 @api_view(['GET'])
 def extract_audio(request,video_id):
-    video_path=ScreenVideo.video_file
+    video = ScreenVideo.objects.get(pk=video_id)
+    video_path=video.video_file.path
     video= VideoFileClip(video_path)
 
     audio=video.audio
