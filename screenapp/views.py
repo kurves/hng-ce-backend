@@ -98,14 +98,14 @@ def extract_audio(request,video_id):
     ]
 
 
+    try:
+        subprocess.run(command, check=True)
+        with open(output_file, 'rb') as audio_file:
+            response = FileResponse(audio_file, content_type='audio/mpeg')
+            response['Content-Disposition'] = f'attachment; filename="extracted_audio.mp3"'
+        return response
 
 
-    """audio=video.audio
-    temp_file= tempfile.NamedTemporaryFile(delete=False,suffix='.mp3') 
-    audio.write_audiofile(temp_file)
-    video.close()
-    audio.close()
-    """
 @api_view(['GET'])
 def transcribe_video(request, video_id):
   
