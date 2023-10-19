@@ -90,6 +90,8 @@ def extract_audio(request,video_id):
     command = [
         'ffmpeg',
         '-i', video_path,
+        '-vn',  
+        '-acodec', 'libmp3lame',
         '-q:a', '0',
         '-map', 'a',
         video_output,
