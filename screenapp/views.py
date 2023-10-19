@@ -92,20 +92,13 @@ def extract_audio(request,video_id):
     'ffmpeg',
     '-i', video_path,
     '-vn',
+    '-acodec', 'libmp3lame',
+    '-q:a', '0',
+    '-map', 'a',
     '-c:a', 'copy',
-    output_audio_path
+    video_output
     ])
     
-    command = [
-        'ffmpeg',
-        '-i', video_path,
-        '-vn',  
-        '-acodec', 'libmp3lame',
-        '-q:a', '0',
-        '-map', 'a',
-        video_output,
-    ]
-
 
     try:
         subprocess.run(command, check=True)
