@@ -86,6 +86,15 @@ def extract_audio(request,video_id):
     video = ScreenVideo.objects.get(pk=video_id)
     video_path=video.video_file.path
     video_output= video.video_file.path
+
+
+    subprocess.run([
+    'ffmpeg',
+    '-i', video_path,
+    '-vn',
+    '-c:a', 'copy',
+    output_audio_path
+    ])
     
     command = [
         'ffmpeg',
@@ -100,7 +109,7 @@ def extract_audio(request,video_id):
 
     try:
         subprocess.run(command, check=True)
-        with open(output_file, 'rb') as audio_file:
+        with open(video_output, 'rb') as audio_file:
             response = FileResponse(audio_file, content_type='audio/mpeg')
             response['Content-Disposition'] = f'attachment; filename="extracted_audio.mp3"'
         return response
