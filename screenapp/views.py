@@ -105,6 +105,9 @@ def extract_audio(request,video_id):
             response['Content-Disposition'] = f'attachment; filename="extracted_audio.mp3"'
         return response
 
+    except subprocess.CalledProcessError as e:
+        return HttpResponse("Error occurred while extracting audio.", status=500)  
+
 
 @api_view(['GET'])
 def transcribe_video(request, video_id):
