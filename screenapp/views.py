@@ -101,7 +101,7 @@ def extract_audio(request,video_id):
     
 
     try:
-        subprocess.run(command, check=True)
+     
         with open(video_output, 'rb') as audio_file:
             response = FileResponse(audio_file, content_type='audio/mpeg')
             response['Content-Disposition'] = f'attachment; filename="extracted_audio.mp3"'
