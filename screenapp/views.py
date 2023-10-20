@@ -85,8 +85,7 @@ def get_video(request, video_id):
 def extract_audio(request,video_id):
     video = ScreenVideo.objects.get(pk=video_id)
     video_path=video.video_file.path
-    video_output= video.video_file.path
-
+    audio_output= "audio_videos/extracted_audio.mp3"
 
     subprocess.run([
     'ffmpeg',
@@ -96,7 +95,7 @@ def extract_audio(request,video_id):
     '-q:a', '0',
     '-map', 'a',
     '-c:a', 'copy',
-    video_output
+    audio_output
     ])
     
 
