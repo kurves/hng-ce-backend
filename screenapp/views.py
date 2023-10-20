@@ -87,7 +87,7 @@ def extract_audio(request,video_id):
     video_path=video.video_file.path
     audio_output= "audio_videos/extracted_audio.mp3"
 
-    subprocess.run([
+    command=[
     'ffmpeg',
     '-i', video_path,
     '-vn',
@@ -96,11 +96,11 @@ def extract_audio(request,video_id):
     '-map', 'a',
     '-c:a', 'copy',
     audio_output
-    ])
+    ]
     
 
     try:
-     
+        subprocess.run(command, check=True)
         with open(video_output, 'rb') as audio_file:
             response = FileResponse(audio_file, content_type='audio/mpeg')
             response['Content-Disposition'] = f'attachment; filename="extracted_audio.mp3"'
