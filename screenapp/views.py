@@ -97,6 +97,11 @@ def extract_audio(request,video_id):
 
         temp_audio_file = NamedTemporaryFile(delete=False, suffix='.mp3')
         audio_clip.write_audiofile(temp_audio_file.name, codec="mp3")
+        video.audio_file.save(f'audio_{video_id}.mp3', File(temp_audio_file))
+        temp_audio_file.close()
+        return HttpResponse("Audio extracted  successfully.")
+    except Exception as e:
+        return HttpResponse("Error occurred while extracting audio.", status=500)
 
 
 @api_view(['GET'])
