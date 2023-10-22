@@ -88,28 +88,7 @@ def extract_audio(request,video_id):
     video_path=video.video_file.path
     audio_output= video.video_file.path
 
-    command=[
-    'ffmpeg',
-    '-i', video_path,
-    '-vn',
-    '-acodec', 'libmp3lame',
-    '-q:a', '0',
-    '-map', 'a',
-    '-c:a', 'copy',
-    audio_output
-    ]
     
-
-    try:
-        subprocess.run(command,shell=True)
-        with open(audio_output, 'rb') as audio_file:
-            response = FileResponse(audio_file, content_type='audio/mpeg')
-            response['Content-Disposition'] = f'attachment; filename="extracted_audio.mp3"'
-        return response
-
-    except subprocess.CalledProcessError as e:
-        return HttpResponse("Error occurred while extracting audio.", status=500)  
-
 
 @api_view(['GET'])
 def transcribe_video(request, video_id):
