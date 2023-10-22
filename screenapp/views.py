@@ -92,8 +92,12 @@ def extract_audio(request,video_id):
     video = get_object_or_404(ScreenVideoModel, pk=video_id) 
     input_file = video.video_file.path
     try:
-    video_clip = VideoFileClip(input_file)
-    audio_clip = video_clip.audio   
+        video_clip = VideoFileClip(input_file)
+        audio_clip = video_clip.audio  
+
+        temp_audio_file = NamedTemporaryFile(delete=False, suffix='.mp3')
+        audio_clip.write_audiofile(temp_audio_file.name, codec="mp3")
+
 
 @api_view(['GET'])
 def transcribe_video(request, video_id):
