@@ -17,6 +17,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 import subprocess
+from django.shortcuts import get_object_or_404
+from moviepy.editor import VideoFileClip
+from tempfile import NamedTemporaryFile
+from django.core.files import File
 #from drf_yasg.views import extend_schema
 
 
@@ -87,7 +91,9 @@ def extract_audio(request,video_id):
 
     video = get_object_or_404(ScreenVideoModel, pk=video_id) 
     input_file = video.video_file.path
-        
+    try:
+    video_clip = VideoFileClip(input_file)
+    audio_clip = video_clip.audio   
 
 @api_view(['GET'])
 def transcribe_video(request, video_id):
