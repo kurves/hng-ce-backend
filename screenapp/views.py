@@ -84,11 +84,10 @@ def get_video(request, video_id):
  # Extracting audio from video
 @api_view(['GET'])
 def extract_audio(request,video_id):
-    video = ScreenVideo.objects.get(pk=video_id)
-    video_path=video.video_file.path
-    audio_output= video.video_file.path
 
-    
+    video = get_object_or_404(ScreenVideoModel, pk=video_id) 
+    input_file = video.video_file.path
+        
 
 @api_view(['GET'])
 def transcribe_video(request, video_id):
