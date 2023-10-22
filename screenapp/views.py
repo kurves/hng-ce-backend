@@ -6,6 +6,7 @@ from rest_framework import viewsets,generics
 from .models import ScreenVideo
 from .serializers import ScreenVideoSerializer
 import tempfile
+from django.http import FileResponse
 import os
 from rest_framework.parsers import MultiPartParser
 from rest_framework import status
@@ -85,7 +86,7 @@ def get_video(request, video_id):
 def extract_audio(request,video_id):
     video = ScreenVideo.objects.get(pk=video_id)
     video_path=video.video_file.path
-    audio_output= "audio_videos/extracted_audio.mp3"
+    audio_output= video.video_file.path
 
     command=[
     'ffmpeg',
@@ -100,7 +101,7 @@ def extract_audio(request,video_id):
     
 
     try:
-        subprocess.call(command,shell=True)
+        subprocess.run(command,shell=True)
         with open(audio_output, 'rb') as audio_file:
             response = FileResponse(audio_file, content_type='audio/mpeg')
             response['Content-Disposition'] = f'attachment; filename="extracted_audio.mp3"'
