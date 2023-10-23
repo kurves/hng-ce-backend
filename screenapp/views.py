@@ -89,7 +89,7 @@ def get_video(request, video_id):
 @api_view(['GET'])
 def extract_audio(request,video_id):
 
-    video = get_object_or_404(ScreenVideoModel, pk=video_id) 
+    video = get_object_or_404(ScreenVideo, pk=video_id) 
     input_file = video.video_file.path
     try:
         video_clip = VideoFileClip(input_file)
