@@ -10,3 +10,5 @@ drf-yasg[validation]
 pika
 pocketsphinx
 ffmpeg
+SpeechRecognition
+pydub
