@@ -21,6 +21,7 @@ from django.shortcuts import get_object_or_404
 from moviepy.editor import VideoFileClip
 from tempfile import NamedTemporaryFile
 from django.core.files import File
+import speech_recognition as sr
 #from drf_yasg.views import extend_schema
 
 
@@ -108,27 +109,10 @@ def extract_audio(request,video_id):
 def transcribe_video(request, video_id):
   
     video = ScreenVideo.objects.get(pk=video_id)
-
-    
-
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost'))
-
-    
-    channel = connection.channel()
-
-    # Declare a RabbitMQ queue.
-    channel.queue_declare(queue='video_transcriptions')
-
-    # Publish the video ID to the RabbitMQ queue.
-    channel.basic_publish(exchange='', routing_key='video_transcriptions', body=video_id)
-
-    # Close the RabbitMQ connection.
-    connection.close()
-
-    
-    return Response(data,{'status': 'success'})
-    
+    video_path = video.video_file.path
+    video_clip = VideoFileClip(video_path)
+    audio = video_clip.audio
+    recognizer = sr.Recognizer()
 
        
-       
+        
