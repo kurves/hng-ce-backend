@@ -122,6 +122,6 @@ def transcribe_video(request, video_id):
 
         return Response(video_serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            return Response({'error': 'Transcription failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response({'error': 'Transcription failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return Response(video_serializer.errors, status=status.HTTP_400_BAD_REQUEST)       
