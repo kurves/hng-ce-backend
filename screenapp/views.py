@@ -117,9 +117,11 @@ def transcribe_video(request, video_id):
     recognizer = sr.Recognizer()
     
     try: 
-        with sr.AudioFile(audio.write_audiofile(), sample_rate=audio.fps) as source:
-            audio_data = recognizer.record(source)
-            transcription = recognizer.recognize_google(audio_data)
+        
+        with sr.AudioFile(audio_file_name) as source:
+            audio = r.listen(source)
+            transcript = r.recognize_google(audio)
+                
         video.transcription = transcription
         video.save()
 
