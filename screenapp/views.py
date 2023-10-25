@@ -22,6 +22,7 @@ from moviepy.editor import VideoFileClip
 from tempfile import NamedTemporaryFile
 from django.core.files import File
 import speech_recognition as sr
+from moviepy.editor import AudioFileClip
 #from drf_yasg.views import extend_schema
 
 
@@ -109,10 +110,11 @@ def extract_audio(request,video_id):
 def transcribe_video(request, video_id):
   
     video = ScreenVideo.objects.get(pk=video_id)
-    video_path = video.video_file.path
-    video_clip = VideoFileClip(video_path)
-    audio = video_clip.audio
+    video_path = video.audio_file.path
+    video_clip = AudioFileClip(video_path)
+    audio.write_audiofile(audio_path)
     recognizer = sr.Recognizer()
+    
     try: 
         with sr.AudioFile(audio.write_audiofile(), sample_rate=audio.fps) as source:
             audio_data = recognizer.record(source)
