@@ -110,9 +110,10 @@ def extract_audio(request,video_id):
 def transcribe_video(request, video_id):
   
     video = ScreenVideo.objects.get(pk=video_id)
-    video_path = video.audio_file.path
-    video_clip = AudioFileClip(video_path)
-    audio.write_audiofile(audio_path)
+    video_path = video.video_file.path
+    audio = AudioFileClip(video_path)
+    audio_clip=video.audio_file.path
+    audio.write_audiofile(audio_clip)
     recognizer = sr.Recognizer()
     
     try: 
